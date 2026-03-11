@@ -52,4 +52,16 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELECTRON_MIRROR: https://github.com/electron/electron/releases/download/
 
-      - name: Build and
+      - name: Build and Publish (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npx electron-builder --win --${{ matrix.arch }} --publish=always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ELECTRON_MIRROR: https://github.com/electron/electron/releases/download/
+
+      - name: Build and Publish (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npx electron-builder --linux --${{ matrix.arch }} --publish=always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ELECTRON_MIRROR: https://github.com/electron/electron/releases/download/
