@@ -220,12 +220,6 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 export type SessionStatus = 'active' | 'expired' | 'deleted'
 
 /**
- * Session Mode Enum
- * - single: Single-turn mode, session deleted after each chat
- */
-export type SessionMode = 'single'
-
-/**
  * Sliding Window Configuration Interface
  * Controls message count-based context trimming
  */
@@ -305,10 +299,6 @@ export interface SessionRecord {
   providerId: string
   /** Account ID */
   accountId: string
-  /** Provider-specific session ID (e.g., conversation_id, chat_id) */
-  providerSessionId: string
-  /** Parent message ID (for multi-turn conversations) */
-  parentMessageId?: string
   /** Session type */
   sessionType: 'chat' | 'agent'
   /** Message history */
@@ -333,8 +323,6 @@ export interface SessionRecord {
  * Global session management settings
  */
 export interface SessionConfig {
-  /** Session mode: 'single' for delete after chat, 'multi' for persistent sessions */
-  mode: SessionMode
   /** Session timeout (minutes), default 30 */
   sessionTimeout: number
   /** Max messages per session, default 50 */
@@ -609,7 +597,6 @@ export interface StoreSchema {
  * Default Session Configuration
  */
 export const DEFAULT_SESSION_CONFIG: SessionConfig = {
-  mode: 'single',
   sessionTimeout: 30,
   maxMessagesPerSession: 50,
   deleteAfterTimeout: false,
@@ -818,6 +805,59 @@ export const BUILTIN_PROVIDERS: BuiltinProviderConfig[] = [
         required: false,
         placeholder: 'Enter Real User ID (optional)',
         helpText: 'If provided, use this instead of JWT user ID',
+      },
+    ],
+  },
+  {
+    id: 'mimo',
+    name: 'Mimo',
+    type: 'builtin',
+    authType: 'cookie',
+    apiEndpoint: 'https://aistudio.xiaomimimo.com',
+    chatPath: '/open-apis/bot/chat',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*',
+      'Origin': 'https://aistudio.xiaomimimo.com',
+      'Referer': 'https://aistudio.xiaomimimo.com/',
+      'X-Timezone': 'Asia/Shanghai',
+    },
+    enabled: true,
+    description: 'XiaomiMIMO - Xiaomi General Intelligence Foundation Model',
+    supportedModels: [
+      'mimo-v2-pro',
+      'mimo-v2-flash-studio',
+      'mimo-v2-omni',
+    ],
+    modelMappings: {
+      'mimo-v2-pro': 'mimo-v2-pro',
+      'mimo-v2-flash-studio': 'mimo-v2-flash-studio',
+      'mimo-v2-omni': 'mimo-v2-omni',
+    },
+    credentialFields: [
+      {
+        name: 'service_token',
+        label: 'Service Token',
+        type: 'password',
+        required: true,
+        placeholder: 'Enter serviceToken from Cookie',
+        helpText: 'Found in browser DevTools -> Application -> Cookies -> serviceToken',
+      },
+      {
+        name: 'user_id',
+        label: 'User ID',
+        type: 'text',
+        required: true,
+        placeholder: 'Enter userId from Cookie',
+        helpText: 'Found in browser DevTools -> Application -> Cookies -> userId',
+      },
+      {
+        name: 'ph_token',
+        label: 'PH Token',
+        type: 'password',
+        required: true,
+        placeholder: 'Enter xiaomichatbot_ph from Cookie',
+        helpText: 'Found in browser DevTools -> Application -> Cookies -> xiaomichatbot_ph',
       },
     ],
   },

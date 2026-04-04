@@ -57,20 +57,14 @@ interface QwenAiMessage {
 
 interface ChatCompletionRequest {
   model: string
+  /** Original model name before mapping (used for feature detection like thinking mode) */
+  originalModel?: string
   messages: QwenAiMessage[]
   stream?: boolean
   temperature?: number
   enable_thinking?: boolean
   thinking_budget?: number
   chatId?: string
-  isMultiTurn?: boolean
-  sessionContext?: {
-    sessionId: string
-    providerSessionId?: string
-    parentMessageId?: string
-    messages: any[]
-    isNew: boolean
-  }
 }
 
 function uuid(): string {
@@ -270,9 +264,6 @@ export class QwenAiAdapter {
       forceThinking = (this as any)._forceThinking
     }
 
-    // Use session context passed from forwarder (avoid duplicate getOrCreateSession calls)
-    const sessionContext = request.sessionContext
-    
     // Always create a new chat (single-turn mode only)
     const chatId = await this.createChat(modelId, 'OpenAI_API_Chat')
     console.log('[QwenAI] Created new chat:', chatId)

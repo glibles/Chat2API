@@ -46,6 +46,7 @@ function mapOAuthCredentials(providerId: string | undefined, credentials: Record
     'qwen-ai': 'tongyi_sso_ticket',
     'zai': 'tongyi_sso_ticket',
     'perplexity': '__Secure-next-auth.session-token',
+    'mimo': 'serviceToken',
   }
 
   const providerFieldNames: Record<string, string> = {
@@ -55,6 +56,7 @@ function mapOAuthCredentials(providerId: string | undefined, credentials: Record
     'qwen-ai': 'ticket',
     'zai': 'ticket',
     'perplexity': 'sessionToken',
+    'mimo': 'service_token',
   }
 
   const oauthKey = credentialKeyMap[providerId]
@@ -83,6 +85,21 @@ function mapOAuthCredentials(providerId: string | undefined, credentials: Record
   }
   if (providerId === 'perplexity' && credentials['next-auth.session-token']) {
     return { sessionToken: credentials['next-auth.session-token'] }
+  }
+
+  // For Mimo, map all three tokens
+  if (providerId === 'mimo') {
+    const result: Record<string, string> = {}
+    if (credentials['serviceToken']) {
+      result['service_token'] = credentials['serviceToken']
+    }
+    if (credentials['userId']) {
+      result['user_id'] = credentials['userId']
+    }
+    if (credentials['xiaomichatbot_ph']) {
+      result['ph_token'] = credentials['xiaomichatbot_ph']
+    }
+    return result
   }
 
   return credentials
@@ -144,7 +161,7 @@ export function AddAccountDialog({
   const isEditing = !!editingAccount
   const builtinProvider = provider as BuiltinProviderConfig | null
   const credentialFields: CredentialField[] = builtinProvider?.credentialFields || getDefaultCredentialFields(provider?.authType, t)
-  const supportsOAuth = provider && ['deepseek', 'glm', 'kimi', 'minimax', 'qwen', 'qwen-ai', 'zai', 'perplexity'].includes(provider.id)
+  const supportsOAuth = provider && ['deepseek', 'glm', 'kimi', 'mimo', 'minimax', 'qwen', 'qwen-ai', 'zai', 'perplexity'].includes(provider.id)
 
   useEffect(() => {
     if (open) {
@@ -573,6 +590,23 @@ function CredentialFieldsForm({ fields, credentials, onChange, t, providerId }: 
           label: t('zai.token'),
           placeholder: t('zai.tokenPlaceholder'),
           helpText: t('zai.tokenHelp'),
+        },
+      },
+      mimo: {
+        service_token: {
+          label: t('mimo.serviceToken'),
+          placeholder: t('mimo.serviceTokenPlaceholder'),
+          helpText: t('mimo.serviceTokenHelp'),
+        },
+        user_id: {
+          label: t('mimo.userId'),
+          placeholder: t('mimo.userIdPlaceholder'),
+          helpText: t('mimo.userIdHelp'),
+        },
+        ph_token: {
+          label: t('mimo.phToken'),
+          placeholder: t('mimo.phTokenPlaceholder'),
+          helpText: t('mimo.phTokenHelp'),
         },
       },
       perplexity: {

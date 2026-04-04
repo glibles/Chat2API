@@ -464,8 +464,8 @@ export async function registerIpcHandlers(mainWindow: BrowserWindow | null): Pro
     await oauthManager.cancelLogin()
   })
 
-  ipcMain.handle(IpcChannels.OAUTH_LOGIN_WITH_TOKEN, async (_, data: { providerId: string, providerType: ProviderVendor, token: string, realUserID?: string }): Promise<OAuthResult> => {
-    return await oauthManager.loginWithToken(data.providerId, data.providerType, data.token, data.realUserID)
+  ipcMain.handle(IpcChannels.OAUTH_LOGIN_WITH_TOKEN, async (_, data: { providerId: string, providerType: ProviderVendor, token: string, realUserID?: string, mimoUserId?: string, mimoPhToken?: string }): Promise<OAuthResult> => {
+    return await oauthManager.loginWithToken(data.providerId, data.providerType, data.token, data.realUserID, data.mimoUserId, data.mimoPhToken)
   })
 
   ipcMain.handle(IpcChannels.OAUTH_START_IN_APP_LOGIN, async (_, data: { providerId: string, providerType: ProviderVendor, timeout?: number }): Promise<OAuthResult> => {

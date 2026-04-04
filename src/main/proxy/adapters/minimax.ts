@@ -78,14 +78,6 @@ interface ChatCompletionRequest {
   tools?: any[]
   tool_choice?: any
   chatId?: string
-  isMultiTurn?: boolean
-  sessionContext?: {
-    sessionId: string
-    providerSessionId?: string
-    parentMessageId?: string
-    messages: any[]
-    isNew: boolean
-  }
 }
 
 interface DeviceInfo {
@@ -561,23 +553,7 @@ export class MiniMaxAdapter {
     
     const deviceInfo = await this.requestDeviceInfo()
     
-    // Use session context passed from forwarder
-    const sessionContext = request.sessionContext
-    const isMultiTurn = sessionContext && !sessionContext.isNew
-    
-    // Use providerSessionId (existing chat_id) if available
-    let chatId: string = sessionContext?.providerSessionId || ''
-    
-    console.log('[MiniMax] Session info:', {
-      isMultiTurn,
-      chatId: chatId || '(new)',
-    })
-    
-    // In multi-turn mode, only send the last user message
-    // MiniMax will use the chat_id to maintain conversation context
-    const messages = isMultiTurn && chatId 
-      ? [request.messages[request.messages.length - 1]] 
-      : [...request.messages]
+    const messages = [...request.messages]
     
     let toolsPrompt = ''
     // Only inject if tools are provided and not already injected by client
@@ -596,9 +572,10 @@ export class MiniMaxAdapter {
       }
     }
     
-    const requestBody = this.messagesPrepare(messages, toolsPrompt, isMultiTurn)
+    const requestBody = this.messagesPrepare(messages, toolsPrompt, false)
     
     let msgId: string = ''
+    let chatId: string = request.chatId || ''
     
     if (chatId) {
       console.log('[MiniMax] Using existing chat:', chatId)

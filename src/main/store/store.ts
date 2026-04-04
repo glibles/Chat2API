@@ -1292,24 +1292,6 @@ class StoreManager {
   }
 
   /**
-   * Get Active Session By Provider and Account
-   */
-  getActiveSessionByProviderAccount(providerId: string, accountId: string): SessionRecord | undefined {
-    this.ensureInitialized()
-    const sessions = this.store!.get('sessions') || []
-    const config = this.getSessionConfig()
-    const timeoutMs = config.sessionTimeout * 60 * 1000
-    const now = Date.now()
-    
-    return sessions.find((s: SessionRecord) => 
-      s.providerId === providerId && 
-      s.accountId === accountId && 
-      s.status === 'active' &&
-      (now - s.lastActiveAt) < timeoutMs
-    )
-  }
-
-  /**
    * Get Active Sessions
    */
   getActiveSessions(): SessionRecord[] {
@@ -1381,51 +1363,6 @@ class StoreManager {
     sessions[index] = session
     this.store!.set('sessions', sessions)
     return session
-  }
-
-  /**
-   * Update Session Provider Session ID
-   */
-  updateProviderSessionId(sessionId: string, providerSessionId: string, parentMessageId?: string): SessionRecord | null {
-    this.ensureInitialized()
-    const sessions = this.store!.get('sessions') || []
-    const index = sessions.findIndex((s: SessionRecord) => s.id === sessionId)
-    
-    if (index === -1) {
-      return null
-    }
-    
-    sessions[index] = {
-      ...sessions[index],
-      providerSessionId,
-      lastActiveAt: Date.now(),
-      ...(parentMessageId !== undefined && { parentMessageId }),
-    }
-    
-    this.store!.set('sessions', sessions)
-    return sessions[index]
-  }
-
-  /**
-   * Update Session Parent Message ID
-   */
-  updateParentMessageId(sessionId: string, parentMessageId: string): SessionRecord | null {
-    this.ensureInitialized()
-    const sessions = this.store!.get('sessions') || []
-    const index = sessions.findIndex((s: SessionRecord) => s.id === sessionId)
-    
-    if (index === -1) {
-      return null
-    }
-    
-    sessions[index] = {
-      ...sessions[index],
-      parentMessageId,
-      lastActiveAt: Date.now(),
-    }
-    
-    this.store!.set('sessions', sessions)
-    return sessions[index]
   }
 
   /**

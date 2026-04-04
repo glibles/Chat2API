@@ -371,6 +371,33 @@ interface ManagementApiAPI {
   generateSecret: () => Promise<string>
 }
 
+interface StrategyConfig {
+  slidingWindow: {
+    enabled: boolean
+    maxMessages: number
+  }
+  tokenLimit: {
+    enabled: boolean
+    maxTokens: number
+  }
+  summary: {
+    enabled: boolean
+    keepRecentMessages: number
+    summaryPrompt?: string
+  }
+}
+
+interface ContextManagementConfig {
+  enabled: boolean
+  strategies: StrategyConfig
+  executionOrder: ('slidingWindow' | 'tokenLimit' | 'summary')[]
+}
+
+interface ContextManagementAPI {
+  getConfig: () => Promise<ContextManagementConfig>
+  updateConfig: (updates: Partial<ContextManagementConfig>) => Promise<ContextManagementConfig>
+}
+
 interface ElectronAPI {
   proxy: ProxyAPI
   store: StoreAPI
@@ -385,6 +412,7 @@ interface ElectronAPI {
   prompts: PromptsAPI
   session: SessionAPI
   managementApi: ManagementApiAPI
+  contextManagement: ContextManagementAPI
   tray: TrayAPI
   on: (channel: string, callback: (...args: unknown[]) => void) => () => void
   send: (channel: string, ...args: unknown[]) => void

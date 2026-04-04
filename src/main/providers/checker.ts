@@ -147,8 +147,34 @@ export class ProviderChecker {
         return this.checkQwenAiToken(account.credentials.token)
       case 'perplexity':
         return this.checkPerplexityToken(account.credentials.sessionToken || account.credentials.token)
+      case 'mimo':
+        return this.checkMimoToken(
+          account.credentials.service_token,
+          account.credentials.user_id,
+          account.credentials.ph_token
+        )
       default:
+        if (!builtinConfig.tokenCheckEndpoint) {
+          return { valid: true }
+        }
         return this.checkGenericToken(builtinConfig, account)
+    }
+  }
+
+  private static checkMimoToken(
+    serviceToken: string,
+    userId: string,
+    phToken: string
+  ): TokenCheckResult {
+    if (!serviceToken || !userId || !phToken) {
+      return { valid: false, error: 'Missing required credentials: service_token, user_id, ph_token' }
+    }
+
+    return {
+      valid: true,
+      userInfo: {
+        name: 'Mimo User',
+      },
     }
   }
 
