@@ -73,5 +73,8 @@ To add a new provider:
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-> **Personal note:** I primarily use this with DeepSeek and Qwen. When testing a new provider
-> adapter, the quickest feedback loop is `npm run dev` + curl against `localhost:3000/v1/chat/completions`.
+## Personal Notes
+
+> **Fork purpose:** Learning how Electron + Koa proxy architecture works, and experimenting
+> with adding custom provider adapters. Primary focus is on the `src/main/proxy/adapters/`
+> directory and understanding the stream response parsing patterns.
