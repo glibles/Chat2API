@@ -69,13 +69,9 @@ Each AI provider has a dedicated adapter in `src/main/proxy/adapters/` that hand
 - Multi-turn conversation context
 
 To add a new provider:
-1. Create config in `src/main/providers/builtin/` (see existing files for reference)
+1. Create config in `src/main/providers/builtin/` (see existing files as reference)
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-> **Personal note:** When testing a new adapter locally, it's easiest to point a tool like
-> [Chatbox](https://chatboxai.app) at `http://localhost:<proxy_port>` with a dummy API key.
-> That way you can iterate without touching the renderer UI at all.
-
-### Session Management
-The `sessionManager.ts` handles multi-turn conversations by maintaining context between requests. Sessions are keyed by a combination of provider and conversation ID.
+> **Personal note:** I primarily use this with DeepSeek and Qwen. When testing a new provider
+> adapter, the quickest feedback loop is `npm run dev` + curl against `localhost:3000/v1/chat/completions`.
