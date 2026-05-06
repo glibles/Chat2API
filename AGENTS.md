@@ -69,10 +69,13 @@ Each AI provider has a dedicated adapter in `src/main/proxy/adapters/` that hand
 - Multi-turn conversation context
 
 To add a new provider:
-1. Create config in `src/main/providers/builtin/` (see existing files for reference)
+1. Create config in `src/main/providers/builtin/` (see existing files as reference)
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-> **Personal note:** When testing a new adapter locally, it's easiest to point a tool like
-> [Chatbox](https://chatboxai.app) at `http://localhost:<port>` with a dummy API key.
-> The proxy accepts any non-empty string as the key by default.
+## Personal Notes
+
+> **Fork notes (personal use):** I primarily use this with DeepSeek and Qwen.
+> When debugging stream parsing issues, check `forwarder.ts` first — most edge cases
+> around malformed SSE chunks surface there. The `sessionManager.ts` context window
+> trimming logic is also worth reviewing if you hit token-limit errors mid-conversation.
