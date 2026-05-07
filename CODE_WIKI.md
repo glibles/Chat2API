@@ -130,4 +130,12 @@ Chat2API/
 - **主要方法**：
   - `mapModel(requestedModel, provider)`：映射模型名称
   - `getActualModel(requestedModel, providerId)`：根据提供商 ID 获取实际模型名称
-  <!-- NOTE: 通配符映射规则按声明顺序匹配，更具体的规则应放在前面，避免被宽泛的通配符规则提前命中 -->
+  - `getAllMappings()`：获取所有已配置的模型映射规则
+
+> **个人笔记**：模型映射支持通配符（如 `gpt-4*` → `deepseek-chat`），在配置多账户轮询时非常有用。建议优先在此处统一管理模型别名，避免在客户端侧硬编码模型名。
+
+## 5. 开发备忘
+
+- 本 fork 主要用于个人学习，重点关注 `proxy/` 和 `providers/` 模块的实现细节
+- 如需添加新提供商，参考 `src/main/providers/` 下已有实现作为模板
+- 负载均衡策略枚举定义在 `loadbalancer.ts` 中，目前支持 round-robin 和 random 两种模式
