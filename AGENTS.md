@@ -73,6 +73,10 @@ To add a new provider:
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-> **Personal note:** I primarily use this with DeepSeek and Qwen. When testing new adapters,
-> start the dev server with `npm run dev` and point a tool like `curl` or the OpenAI Python
-> client at `http://localhost:3000` to verify streaming works before building.
+> **Personal note:** I'm primarily using this with DeepSeek and Qwen. When testing new adapters,
+> focus on streaming responses first — that's where most edge cases show up in practice.
+
+## Notes for My Fork
+
+- Default proxy port in my setup is `3456` (changed from upstream default to avoid conflicts with other local services)
+- I primarily target macOS builds; Linux/Windows builds are untested on my end
