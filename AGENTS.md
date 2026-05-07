@@ -69,14 +69,13 @@ Each AI provider has a dedicated adapter in `src/main/proxy/adapters/` that hand
 - Multi-turn conversation context
 
 To add a new provider:
-1. Create config in `src/main/providers/builtin/`
+1. Create config in `src/main/providers/builtin/` (see existing files as reference)
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-> **Personal note:** I'm primarily using this with DeepSeek and Qwen. When testing new adapters,
-> focus on streaming responses first — that's where most edge cases show up in practice.
+## Personal Notes
 
-## Notes for My Fork
-
-- Default proxy port in my setup is `3456` (changed from upstream default to avoid conflicts with other local services)
-- I primarily target macOS builds; Linux/Windows builds are untested on my end
+> **Fork note:** I'm primarily using this with DeepSeek and Qwen. If something breaks,
+> check the adapter files for those two providers first. The OAuth token auto-extraction
+> in `inAppLogin.ts` can be fragile when providers update their login pages — may need
+> periodic updates.
