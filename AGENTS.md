@@ -69,13 +69,10 @@ Each AI provider has a dedicated adapter in `src/main/proxy/adapters/` that hand
 - Multi-turn conversation context
 
 To add a new provider:
-1. Create config in `src/main/providers/builtin/` (see existing files as reference)
+1. Create config in `src/main/providers/builtin/`
 2. Create adapter in `src/main/proxy/adapters/`
 3. Register the adapter in `src/main/proxy/routes.ts`
 
-## Personal Notes
-
-> **Fork notes (personal use):** I primarily use this with DeepSeek and Qwen.
-> When debugging stream parsing issues, check `forwarder.ts` first — most edge cases
-> around malformed SSE chunks surface there. The `sessionManager.ts` context window
-> trimming logic is also worth reviewing if you hit token-limit errors mid-conversation.
+> **Personal note:** I primarily use this with DeepSeek and Qwen. When testing new adapters,
+> start the dev server with `npm run dev` and point a tool like `curl` or the OpenAI Python
+> client at `http://localhost:3000` to verify streaming works before building.
