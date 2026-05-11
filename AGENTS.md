@@ -6,6 +6,8 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 Chat2API Manager is an Electron desktop application that provides an OpenAI-compatible API proxy for multiple AI service providers (DeepSeek, GLM, Kimi, MiniMax, Qwen, Z.ai, Perplexity). It enables using any OpenAI-compatible client with these providers across macOS, Windows, and Linux.
 
+> **Personal fork note:** I'm using this primarily with DeepSeek and Qwen on macOS. If you're testing locally, `npm run dev` is sufficient — the Windows/Linux build commands are less relevant for my workflow.
+
 ## Build Commands
 
 ```bash
@@ -69,13 +71,4 @@ Each AI provider has a dedicated adapter in `src/main/proxy/adapters/` that hand
 - Multi-turn conversation context
 
 To add a new provider:
-1. Create config in `src/main/providers/builtin/` (see existing files as reference)
-2. Create adapter in `src/main/proxy/adapters/`
-3. Register the adapter in `src/main/proxy/routes.ts`
-
-## Personal Notes
-
-> **Fork note:** I'm primarily using this with DeepSeek and Qwen. If something breaks,
-> check the adapter files for those two providers first. The OAuth token auto-extraction
-> in `inAppLogin.ts` can be fragile when providers update their login pages — may need
-> periodic updates.
+1. Create config in `src/main/provide
